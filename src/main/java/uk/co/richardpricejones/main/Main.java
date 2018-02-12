@@ -19,7 +19,7 @@ import java.util.List;
 import static com.sun.org.apache.xalan.internal.lib.ExsltStrings.split;
 
 public class Main {
-    private static final String JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLite.db";
+    public  static final String JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLite.db";
 
     private void run(String[] args) {
 
@@ -39,24 +39,11 @@ public class Main {
 
 
 
-
-        // Connect to Database
-        // DatabaseDriverManager databaseDriverManager = DatabaseDriverManager.getInstance();
-
-        orderDb.CreateOrderTable("order");
-
-
-        // DataBase URL, Username, Password
-
-
-
-
-
         // Create order Table
+        orderDb.CreateOrderTable("ORDER");
 
-
-
-
+        // Create Person table
+        personDb.CreatePersonTable();
 
 
         // Create Order Objects from input data
@@ -81,18 +68,26 @@ public class Main {
 
         });
 //
-//        // Create Person Table and Person Objects
-//        // Again skip the first line because it describes the table headings.
-//        persons.stream().skip(1).forEach(person -> {
-//            String personArgs [] = person.split(",");
-//
-//            if(personArgs.length == 5){
-//                //Create Person objects from file data
-//                Person personobj = new Person(Long.parseLong(personArgs[0]),personArgs[1],personArgs[2],personArgs[3],personArgs[4]);
-//            }
-//
-//
-//        });
+        // Create Person Table and Person Objects
+        // Again skip the first line because it describes the table headings.
+        persons.stream().skip(1).forEach(person -> {
+            String personArgs [] = person.split(",");
+
+            if(personArgs.length == 5){
+                //Create Person objects from file data
+                Person personobj = new Person(Long.parseLong(personArgs[0]),personArgs[1],personArgs[2],personArgs[3],personArgs[4]);
+
+
+                try {
+                    personDb.insert(personobj);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        });
 
 
 

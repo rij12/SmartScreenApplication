@@ -27,6 +27,7 @@ public class OrderDb {
      *
      * @param order
      */
+    // todo - change "order" ORDER as it says on the requirements specification.
     public void insert(Order order) throws ClassNotFoundException {
 
         String sql = "INSERT INTO orders(Order_ID,Order_Number,Person_ID) VALUES(" + order.getId() + ", " + order.getOrderNumber() + "," + order.getPersonId() + ")";
@@ -68,6 +69,8 @@ public class OrderDb {
         // lol
     }
 
+
+    // todo - change "order" ORDER as it says on the requirements specification.
     public void CreateOrderTable(String tableName) {
 
         String sqlCreate = "CREATE TABLE IF NOT EXISTS orders (\n"
@@ -75,9 +78,6 @@ public class OrderDb {
                 + "	Order_Number integer,\n"
                 + "	Person_ID integer NOT NULL\n"
                 + ");";
-
-
-//            Connection conn = databaseDriverManager.getConnection();
 
         Connection conn = null;
         try {

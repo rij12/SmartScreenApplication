@@ -10,6 +10,17 @@ public class PersonDb {
     private static PersonDb instance = null;
     private static final String JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLite.db";
 
+    private static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS PERSON (\n"
+            + "	Person_ID integer PRIMARY KEY,\n"
+            + "	First_Name text,\n"
+            + "	Last_Name text, \n"
+            + "	Street text, \n"
+            + "	City text \n"
+            + ");";
+
+    private static final String INSERT_PERSON = "INSERT INTO PERSON (Person_ID, First_Name, Last_Name, Street, City) "
+            + "VALUES(?, ?, ?, ?, ?)";
+
     private PersonDb() {
         // empty
     }
@@ -26,8 +37,6 @@ public class PersonDb {
      * @throws ClassNotFoundException
      */
     public void insert(Person person) throws ClassNotFoundException {
-        String sql = "INSERT INTO ORDER(Order_ID,Order_Number,Person_ID) VALUES(" + person.getId() + ", " + person.getFirstName() + "," + person.getLastName() + "," + person.getStreet() + " ," + person.getCity() + ")";
-
         Connection conn = null;
         try {
             // Create a Connection
@@ -35,7 +44,12 @@ public class PersonDb {
             conn = DriverManager.getConnection(JDBC_SQL_LITE_FILENAME);
 
             // Use Connection - Insert Person
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            PreparedStatement pstmt = conn.prepareStatement(INSERT_PERSON);
+            pstmt.setLong(1, person.getId());
+            pstmt.setString(2, person.getFirstName());
+            pstmt.setString(3, person.getLastName());
+            pstmt.setString(4, person.getStreet());
+            pstmt.setString(5, person.getCity());
 
             // Execute the update.
             pstmt.executeUpdate();
@@ -68,14 +82,6 @@ public class PersonDb {
 
     public void CreatePersonTable() {
 
-        String sqlCreate = "CREATE TABLE IF NOT EXISTS PERSON (\n"
-                + "	Person_ID integer PRIMARY KEY,\n"
-                + "	First_Name text,\n"
-                + "	Last_Name text, \n"
-                + "	Street text, \n"
-                + "	City text, \n"
-                + ");";
-
         Connection conn = null;
         try {
 
@@ -85,9 +91,7 @@ public class PersonDb {
 
             // Use Connection - Create a PERSON table
             Statement stmt = conn.createStatement();
-            stmt.execute(sqlCreate);
-
-
+            stmt.execute(CREATE_TABLE);
         } catch (Exception e) {
             System.err.println("Could not create Person Table" + e);
         } finally {
