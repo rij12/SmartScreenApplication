@@ -10,6 +10,9 @@ public class OrderDb {
     private static OrderDb instance = null;
     private static final String url = "jdbc:sqlite:SQLite.db";
 
+    private static final String INSERT_ORDER = "INSERT INTO orders(Order_ID,Order_Number,Person_ID)"
+                                             + "VALUES(?, ?, ?)";
+
     private OrderDb() {
         // empty
     }
@@ -30,19 +33,22 @@ public class OrderDb {
     // todo - change "order" ORDER as it says on the requirements specification.
     public void insert(Order order) throws ClassNotFoundException {
 
-        String sql = "INSERT INTO orders(Order_ID,Order_Number,Person_ID) VALUES(" + order.getId() + ", " + order.getOrderNumber() + "," + order.getPersonId() + ")";
-
         Connection conn = null;
         try {
-            // Create a Connection
+            // Create a Connection.
             Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection(url);
 
-            // Use Connection - Insert
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            // Use Connection - Insert Order.
+            PreparedStatement pstmt = conn.prepareStatement(INSERT_ORDER);
+
+            pstmt.setLong(1, order.getId());
+            pstmt.setLong(2, order.getOrderNumber());
+            pstmt.setLong(3, order.getPersonId());
 
             // Execute the update.
             pstmt.executeUpdate();
+
 
         } catch (SQLException e) {
             System.err.println("Couldn't update orders Table" + e);

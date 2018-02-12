@@ -39,11 +39,11 @@ public class PersonDb {
     public void insert(Person person) throws ClassNotFoundException {
         Connection conn = null;
         try {
-            // Create a Connection
+            // Create a Connection.
             Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection(JDBC_SQL_LITE_FILENAME);
 
-            // Use Connection - Insert Person
+            // Use Connection - Insert Person.
             PreparedStatement pstmt = conn.prepareStatement(INSERT_PERSON);
             pstmt.setLong(1, person.getId());
             pstmt.setString(2, person.getFirstName());
