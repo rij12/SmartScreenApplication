@@ -6,20 +6,22 @@ import uk.co.richardpricejones.db.PersonDb;
 import uk.co.richardpricejones.models.Order;
 import uk.co.richardpricejones.models.Person;
 
-import javax.xml.crypto.Data;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
-import static com.sun.org.apache.xalan.internal.lib.ExsltStrings.split;
 
 public class Main {
-    public  static final String JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLite.db";
+
+
+    // Config File start.
+    public static final String JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLite.db";
+    public static final String JDBC_CLASS_FOR = "org.sqlite.JDBC";
+    // Config File end.
+
 
     private void run(String[] args) {
 
@@ -40,7 +42,7 @@ public class Main {
 
 
         // Create order Table
-        orderDb.CreateOrderTable("ORDER");
+        orderDb.CreateOrderTable();
 
         // Create Person table
         personDb.CreatePersonTable();
@@ -67,7 +69,7 @@ public class Main {
             }
 
         });
-//
+
         // Create Person Table and Person Objects
         // Again skip the first line because it describes the table headings.
         persons.stream().skip(1).forEach(person -> {
@@ -77,19 +79,22 @@ public class Main {
                 //Create Person objects from file data
                 Person personobj = new Person(Long.parseLong(personArgs[0]),personArgs[1],personArgs[2],personArgs[3],personArgs[4]);
 
-
                 try {
                     personDb.insert(personobj);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-
             }
-
-
         });
 
 
+        // Interview Requirements
+
+        // 1. Person with at least one order!
+        personDb.personWithAtLeastOneOrder();
+
+        // 2. All Orders with First Name of the corresponding person (if available)
+        orderDb.findAllOrdersWithFirstName();
 
 
 

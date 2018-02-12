@@ -1,25 +1,31 @@
 package uk.co.richardpricejones.db;
 
+import uk.co.richardpricejones.main.Main;
 import uk.co.richardpricejones.models.Person;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersonDb {
 
 
     private static PersonDb instance = null;
-    private static final String JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLite.db";
 
     private static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS PERSON (\n"
-            + "	Person_ID integer PRIMARY KEY,\n"
-            + "	First_Name text,\n"
-            + "	Last_Name text, \n"
-            + "	Street text, \n"
-            + "	City text \n"
+            + "	Person_ID INTEGER PRIMARY KEY,\n"
+            + "	First_Name TEXT,\n"
+            + "	Last_Name TEXT, \n"
+            + "	Street TEXT, \n"
+            + "	City TEXT \n"
             + ");";
 
     private static final String INSERT_PERSON = "INSERT INTO PERSON (Person_ID, First_Name, Last_Name, Street, City) "
             + "VALUES(?, ?, ?, ?, ?)";
+
+    private static final String PERSON_WITH_AT_LEAST_ONE_ORDER = "SELECT Person.Person_ID FROM PERSON INNER JOIN 'ORDER' ON Person.Person_ID = 'ORDER'.Person_ID";
+
+    private static final String FIND_PERSON_BY_ID = "SELECT * FROM PERSON WHERE PERSON_ID = ?";
 
     private PersonDb() {
         // empty
@@ -40,8 +46,9 @@ public class PersonDb {
         Connection conn = null;
         try {
             // Create a Connection.
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(JDBC_SQL_LITE_FILENAME);
+            // todo change this to a config file.
+            Class.forName(Main.JDBC_CLASS_FOR);
+            conn = DriverManager.getConnection(Main.JDBC_SQL_LITE_FILENAME);
 
             // Use Connection - Insert Person.
             PreparedStatement pstmt = conn.prepareStatement(INSERT_PERSON);
@@ -67,27 +74,73 @@ public class PersonDb {
         }
     }
 
-    public Person select(Long id) {
-        return null; // magic
-    }
-
     public void update(Person person) {
 
     }
 
     public void delete(Long id) {
-        // lol
+
+    }
+
+    /**
+     * Get Person record via a Person_ID(long)
+     *
+     * @param id Person_Id
+     * @return Populated Person Object.
+     */
+    public Person selectById(int id) {
+
+        Connection conn = null;
+
+        Person person;
+        try {
+            // Create a Connection.
+            Class.forName("org.sqlite.JDBC");
+            conn = DriverManager.getConnection(Main.JDBC_SQL_LITE_FILENAME);
+
+            // Use Connection - Create find a Person record via a given Person_ID.
+            PreparedStatement pstmt = conn.prepareStatement(FIND_PERSON_BY_ID);
+            pstmt.setInt(1, id);
+
+
+            ResultSet rs = pstmt.executeQuery();
+
+            // Create Person Object to be returned.
+            long person_id = rs.getLong("Person_ID");
+            String firstName = rs.getString("First_Name");
+            String lastName = rs.getString("Last_Name");
+            String street = rs.getString("Street");
+            String city = rs.getString("City");
+
+            person = new Person(person_id, firstName, lastName, street, city);
+            return person;
+
+
+        } catch (Exception e) {
+            System.err.println("Couldn't find Person with ID " + id + ", " + e);
+            return null;
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
     }
 
 
+    /**
+     * Create a person Table with the Require schema.
+     */
     public void CreatePersonTable() {
 
         Connection conn = null;
         try {
-
             // Create a Connection
             Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(JDBC_SQL_LITE_FILENAME);
+            conn = DriverManager.getConnection(Main.JDBC_SQL_LITE_FILENAME);
 
             // Use Connection - Create a PERSON table
             Statement stmt = conn.createStatement();
@@ -103,5 +156,64 @@ public class PersonDb {
                 System.out.println(ex.getMessage());
             }
         }
+    }
+
+    /**
+     * Get A person with a least one Order.
+     *
+     * @return List a People that have at least one order.
+     */
+    public List<Person> personWithAtLeastOneOrder() {
+
+        ArrayList<Integer> personWithAtLeastOneOrder = new ArrayList<>(5);
+        List<Person> people = new ArrayList<>();
+
+        Connection conn = null;
+        try {
+            // Create a Connection
+            Class.forName("org.sqlite.JDBC");
+            conn = DriverManager.getConnection(Main.JDBC_SQL_LITE_FILENAME);
+
+            // Use Connection - Create a PERSON table
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(PERSON_WITH_AT_LEAST_ONE_ORDER);
+//            System.out.println(rs);
+
+            // List of ID's of people who have at least one order.
+            while (rs.next()) {
+                Integer personId = Integer.parseInt(rs.getString("Person_ID"));
+                System.out.println(personId);
+                // Add id to array if not already in there.
+
+                // Check if the Person_ID is already in the arrayList.
+                if (!personWithAtLeastOneOrder.contains(personId)) {
+                    personWithAtLeastOneOrder.add(personId);
+                }
+            }
+
+            // Return Array of ID's and then use this to find the the people from the people column.
+            personWithAtLeastOneOrder.forEach(p ->{
+                   Person person = selectById(p);
+                   if (person != null) people.add(person);
+            });
+
+            System.out.println("Persons with at least one Order");
+            people.forEach(p -> System.out.println(p));
+            System.out.println("");
+
+
+
+        } catch (Exception e) {
+            System.err.println("Couldn't find execute Person with at least one order SQL statement!" + e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        return null;
     }
 }
