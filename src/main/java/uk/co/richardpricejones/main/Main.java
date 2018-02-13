@@ -35,10 +35,10 @@ public class Main {
         List<String> persons = readFile(args[1]);
 
         // Create order Table
-        orderDb.CreateOrderTable();
+        orderDb.createOrderTable();
 
         // Create Person table
-        personDb.CreatePersonTable();
+        personDb.createPersonTable();
 
         // Create Order Objects from input data
         // Skip is used to NOT process the first line, due it being the table headings.

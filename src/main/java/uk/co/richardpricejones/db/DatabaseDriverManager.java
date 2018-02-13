@@ -6,68 +6,17 @@ import java.sql.*;
 
 public class DatabaseDriverManager {
 
+    private static final String JDBC_SQL_LITE_FILENAME;
 
-    private static final String JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLite.db";
-    /*
-     * 1. Driver Class
-     * 2. Connection URL
-     */
-
-//    private static DatabaseDriverManager instance = null;
-//
-//    public static DatabaseDriverManager getInstance() {
-//        if (instance == null)
-//            instance = new DatabaseDriverManager();
-//        return instance;
-//    }
-//
-//    private DatabaseDriverManager(){
-//        // empty
-//    }
-
-    private Connection databaseConnection = null;
-
-    public Connection connectToDatabase(String url) throws SQLException {
-
-        /*
-         * I would Normally use a property file that the Connection URL, Username and Password(Hashed)
-         */
-        Connection con = null;
-
-        // Create a database Connection
-
-        try {
-            Class.forName("org.sqlite.JDBC");
-            con =  DriverManager.getConnection(url);
-
-        } catch (ClassNotFoundException ex) {
-            System.err.println(ex);
-        }
-        return con;
+    static {
+        if (System.getProperty("IS_TEST") == null)
+            JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLite.db";
+        else
+            JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLiteTest.db";
     }
 
-    public Connection getConnection() {
-        if (databaseConnection != null) {
-            return databaseConnection;
-        } else {
-            try {
-                databaseConnection = connectToDatabase(JDBC_SQL_LITE_FILENAME);
-                return databaseConnection;
-            } catch (SQLException e) {
-                System.err.println("Couldn't get database connection" + e);
-            }
-            return null;
-        }
-
+    public static Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("org.sqlite.JDBC");
+        return DriverManager.getConnection(JDBC_SQL_LITE_FILENAME);
     }
-
-    public void closeConnection(){
-        try {
-            databaseConnection.close();
-        } catch (SQLException e) {
-            System.err.println("Couldn't close database connection" + e);
-        }
-    }
-
-
 }

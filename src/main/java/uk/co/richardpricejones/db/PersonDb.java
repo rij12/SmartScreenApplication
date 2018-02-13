@@ -27,6 +27,8 @@ public class PersonDb {
 
     private static final String FIND_PERSON_BY_ID = "SELECT * FROM PERSON WHERE PERSON_ID = ?";
 
+    private static final String SELECT_ALL_ORDERS = "SELECT * FROM PERSON";
+
     private PersonDb() {
         // empty
     }
@@ -46,9 +48,7 @@ public class PersonDb {
         Connection conn = null;
         try {
             // Create a Connection.
-            // todo change this to a config file.
-            Class.forName(Main.JDBC_CLASS_FOR);
-            conn = DriverManager.getConnection(Main.JDBC_SQL_LITE_FILENAME);
+            conn = DatabaseDriverManager.getConnection();
 
             // Use Connection - Insert Person.
             PreparedStatement pstmt = conn.prepareStatement(INSERT_PERSON);
@@ -60,7 +60,6 @@ public class PersonDb {
 
             // Execute the update.
             pstmt.executeUpdate();
-
         } catch (SQLException e) {
             System.err.println("Couldn't update person Table" + e);
         } finally {
@@ -95,13 +94,11 @@ public class PersonDb {
         Person person;
         try {
             // Create a Connection.
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(Main.JDBC_SQL_LITE_FILENAME);
+            conn = DatabaseDriverManager.getConnection();
 
             // Use Connection - Create find a Person record via a given Person_ID.
             PreparedStatement pstmt = conn.prepareStatement(FIND_PERSON_BY_ID);
             pstmt.setInt(1, id);
-
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -114,8 +111,6 @@ public class PersonDb {
 
             person = new Person(person_id, firstName, lastName, street, city);
             return person;
-
-
         } catch (Exception e) {
             System.err.println("Couldn't find Person with ID " + id + ", " + e);
             return null;
@@ -134,13 +129,11 @@ public class PersonDb {
     /**
      * Create a person Table with the Require schema.
      */
-    public void CreatePersonTable() {
-
+    public void createPersonTable() {
         Connection conn = null;
         try {
             // Create a Connection
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(Main.JDBC_SQL_LITE_FILENAME);
+            conn = DatabaseDriverManager.getConnection();
 
             // Use Connection - Create a PERSON table
             Statement stmt = conn.createStatement();
@@ -164,21 +157,17 @@ public class PersonDb {
      * @return List a People that have at least one order.
      */
     public List<Person> personWithAtLeastOneOrder() {
-
         ArrayList<Integer> personWithAtLeastOneOrder = new ArrayList<>(5);
         List<Person> people = new ArrayList<>();
 
         Connection conn = null;
         try {
             // Create a Connection
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(Main.JDBC_SQL_LITE_FILENAME);
+            conn = DatabaseDriverManager.getConnection();
 
             // Use Connection - Create a PERSON table
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(PERSON_WITH_AT_LEAST_ONE_ORDER);
-
-
             // List of ID's of people who have at least one order.
             while (rs.next()) {
                 Integer personId = Integer.parseInt(rs.getString("Person_ID"));
@@ -191,17 +180,14 @@ public class PersonDb {
             }
 
             // Return Array of ID's and then use this to find the the people from the people column.
-            personWithAtLeastOneOrder.forEach(p ->{
-                   Person person = selectById(p);
-                   if (person != null) people.add(person);
+            personWithAtLeastOneOrder.forEach(p -> {
+                Person person = selectById(p);
+                if (person != null) people.add(person);
             });
 
             System.out.println("Persons with at least one Order");
             people.forEach(p -> System.out.println(p));
             System.out.println("");
-
-
-
         } catch (Exception e) {
             System.err.println("Couldn't find execute Person with at least one order SQL statement!" + e);
         } finally {
@@ -213,6 +199,43 @@ public class PersonDb {
                 System.out.println(ex.getMessage());
             }
         }
-        return null;
+        return people;
+    }
+
+    public List<Person> selectAll() throws ClassNotFoundException {
+        List<Person> people = new ArrayList<>();
+
+        Connection conn = null;
+
+        try {
+            // Create a Connection.
+            conn = DatabaseDriverManager.getConnection();
+
+            // Use Connection - Select all from ORDERS Table.
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(SELECT_ALL_ORDERS);
+            // List of ID's of people who have at least one order.
+            while (rs.next()) {
+                long person_id = rs.getLong("Person_ID");
+                String firstName = rs.getString("First_Name");
+                String lastName = rs.getString("Last_Name");
+                String street = rs.getString("Street");
+                String city = rs.getString("City");
+
+                Person person = new Person(person_id, firstName, lastName, street, city);
+                people.add(person);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        return people;
     }
 }

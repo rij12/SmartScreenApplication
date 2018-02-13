@@ -8,22 +8,19 @@ import java.sql.*;
 public class OrderDb {
 
     private static OrderDb instance = null;
-    private static final String url = "jdbc:sqlite:SQLite.db";
 
     private static final String INSERT_ORDER = "INSERT INTO 'ORDER'(Order_ID,Order_Number,Person_ID)"
-                                             + "VALUES(?, ?, ?)";
-
+            + "VALUES(?, ?, ?)";
 
     // todo Explain what this does!
     private static final String ALL_ORDERS_WITH_FIRST_NAME = "SELECT 'ORDER'.Order_Number, 'Order'.Order_ID, " +
-                                                             "PERSON.First_Name FROM 'ORDER' LEFT JOIN PERSON " +
-                                                             "ON 'ORDER'.Person_ID = PERSON.Person_ID";
-
+            "PERSON.First_Name FROM 'ORDER' LEFT JOIN PERSON " +
+            "ON 'ORDER'.Person_ID = PERSON.Person_ID";
 
     private static final String ORDER_TABLE_CREATE_SQL = "CREATE TABLE IF NOT EXISTS 'ORDER' (\n"
-            + "	Order_ID integer PRIMARY KEY,\n"
-            + "	Order_Number integer,\n"
-            + "	Person_ID integer \n"
+            + "	Order_ID INTEGER PRIMARY KEY,\n"
+            + "	Order_Number INTEGER,\n"
+            + "	Person_ID INTEGER \n"
             + ");";
 
     private OrderDb() {
@@ -36,7 +33,6 @@ public class OrderDb {
         return instance;
     }
 
-
     /**
      * Given a order model object it will make an entry into the database.
      * "INSERT INTO Customers " + "VALUES (1001, 'Simpson', 'Mr.', 'Springfield', 2001)");
@@ -47,10 +43,7 @@ public class OrderDb {
 
         Connection conn = null;
         try {
-            // Create a Connection.
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(url);
-
+            conn = DatabaseDriverManager.getConnection();
             // Use Connection - Insert Order.
             PreparedStatement pstmt = conn.prepareStatement(INSERT_ORDER);
 
@@ -86,14 +79,12 @@ public class OrderDb {
 
     }
 
-    public void CreateOrderTable() {
+    public void createOrderTable() {
 
         Connection conn = null;
         try {
-
             // Create a Connection
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(url);
+            conn = DatabaseDriverManager.getConnection();
 
             // Use the connection
             Statement stmt = conn.createStatement();
@@ -119,33 +110,26 @@ public class OrderDb {
 //
 //    ResultSet rs = pstmt.executeQuery();
     // ALL_ORDERS_WITH_FIRST_NAME
-    public void findAllOrdersWithFirstName(){
-
+    public void findAllOrdersWithFirstName() {
         Connection conn = null;
-
         try {
-
             // Create a Connection
-            Class.forName(Main.JDBC_CLASS_FOR);
-            conn = DriverManager.getConnection(Main.JDBC_SQL_LITE_FILENAME);
+            conn = DatabaseDriverManager.getConnection();
 
             // Use the connection
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(ALL_ORDERS_WITH_FIRST_NAME);
 
-
             System.out.println("All Orders with First Name of the corresponding person ");
-            while(rs.next()){
-               long  orderNumber =  rs.getLong("Order_Number");
-               long  orderId =  rs.getLong("Order_ID");
-               String firstName = rs.getString("First_Name");
+            while (rs.next()) {
+                long orderNumber = rs.getLong("Order_Number");
+                long orderId = rs.getLong("Order_ID");
+                String firstName = rs.getString("First_Name");
 
-                System.out.println("Order Number: " + orderNumber + ", "+ "OrderId: " + orderId + ", " + "First Name: " + firstName );
+                System.out.println("Order Number: " + orderNumber + ", " + "OrderId: " + orderId + ", " + "First Name: " + firstName);
             }
-
         } catch (Exception e) {
             System.err.println("Could not get All order with First Names, " + e);
-
         } finally {
             try {
                 if (conn != null) {
