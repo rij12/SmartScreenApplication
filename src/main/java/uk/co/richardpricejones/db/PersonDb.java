@@ -177,12 +177,11 @@ public class PersonDb {
             // Use Connection - Create a PERSON table
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(PERSON_WITH_AT_LEAST_ONE_ORDER);
-//            System.out.println(rs);
+
 
             // List of ID's of people who have at least one order.
             while (rs.next()) {
                 Integer personId = Integer.parseInt(rs.getString("Person_ID"));
-                System.out.println(personId);
                 // Add id to array if not already in there.
 
                 // Check if the Person_ID is already in the arrayList.

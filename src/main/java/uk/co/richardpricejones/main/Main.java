@@ -1,6 +1,5 @@
 package uk.co.richardpricejones.main;
 
-import uk.co.richardpricejones.db.DatabaseDriverManager;
 import uk.co.richardpricejones.db.OrderDb;
 import uk.co.richardpricejones.db.PersonDb;
 import uk.co.richardpricejones.models.Order;
@@ -13,15 +12,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-
 public class Main {
-
 
     // Config File start.
     public static final String JDBC_SQL_LITE_FILENAME = "jdbc:sqlite:SQLite.db";
     public static final String JDBC_CLASS_FOR = "org.sqlite.JDBC";
     // Config File end.
-
 
     private void run(String[] args) {
 
@@ -33,13 +29,10 @@ public class Main {
         for (String arg: args) {
             System.out.println(arg);
         }
-
+        System.out.println("");
 
         List<String> orders = readFile(args[0]);
         List<String> persons = readFile(args[1]);
-
-
-
 
         // Create order Table
         orderDb.CreateOrderTable();
@@ -47,19 +40,18 @@ public class Main {
         // Create Person table
         personDb.CreatePersonTable();
 
-
         // Create Order Objects from input data
         // Skip is used to NOT process the first line, due it being the table headings.
         orders.stream().skip(1).forEach(order -> {
-            String orderArgs [] = order.split("\\|");
+            String orderArgs[] = order.split("\\|");
 
-            if(orderArgs.length != 3 ){
+            if (orderArgs.length != 3) {
                 System.err.println("Incorrect Number of order Arguments!");
                 System.exit(1);
             }
 
             // Create order Object,  ID | OrderNumber | PersonID
-            Order orderobj = new Order (Long.parseLong(orderArgs[0]), Long.parseLong(orderArgs[1]), Long.parseLong(orderArgs[2]));
+            Order orderobj = new Order(Long.parseLong(orderArgs[0]), Long.parseLong(orderArgs[1]), Long.parseLong(orderArgs[2]));
 
             // Add Order to Database.
             try {
@@ -67,7 +59,6 @@ public class Main {
             } catch (ClassNotFoundException e) {
                 System.err.println("Couldn't insert into the Order table " + e);
             }
-
         });
 
         // Create Person Table and Person Objects
@@ -87,7 +78,6 @@ public class Main {
             }
         });
 
-
         // Interview Requirements
 
         // 1. Person with at least one order!
@@ -96,15 +86,13 @@ public class Main {
         // 2. All Orders with First Name of the corresponding person (if available)
         orderDb.findAllOrdersWithFirstName();
 
-
-
     }
 
     /**
      * Read input from a text file.
      *
      * @param fileName - name of provided text file in program args
-     * @return report - return a list that contain the parsed information.
+     * @return
      */
     private static List<String> readFile(String fileName) {
         // Contains all available

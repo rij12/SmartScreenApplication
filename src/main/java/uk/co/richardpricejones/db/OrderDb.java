@@ -3,10 +3,7 @@ package uk.co.richardpricejones.db;
 import uk.co.richardpricejones.main.Main;
 import uk.co.richardpricejones.models.Order;
 
-import javax.xml.crypto.Data;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class OrderDb {
 
