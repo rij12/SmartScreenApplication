@@ -1,9 +1,6 @@
 package uk.co.richardpricejones.db;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import uk.co.richardpricejones.models.Order;
 import uk.co.richardpricejones.models.Person;
 
@@ -13,8 +10,8 @@ import java.util.List;
 
 public class PersonDbTest {
 
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setup() {
         /*
          * 1. Run the app in the test mode
          * 2. Delete the test db if exists
@@ -26,9 +23,9 @@ public class PersonDbTest {
         OrderDb.getInstance().createOrderTable();
     }
 
-    @AfterClass
-    public static void teardown() {
-//        deleteTestDb();
+    @After
+    public void teardown() {
+        deleteTestDb();
     }
 
     @Test
@@ -42,7 +39,7 @@ public class PersonDbTest {
     public void personWithAtLeastOneOrder() throws ClassNotFoundException {
 
         List<Person> testPersonList = new ArrayList<>(1);
-        Person p1 = new Person(1, "Richard", "Price-Jones", "32 High St",
+        Person p1 = new Person(2, "James", "Bond", "32 High St",
                 "London");
         testPersonList.add(p1);
 
@@ -59,11 +56,11 @@ public class PersonDbTest {
      */
     private static void CreateDummyDataForPersonWithAtLeastOneOrder() throws ClassNotFoundException {
 
-        PersonDb.getInstance().insert(new Person(1, "Richard", "Price-Jones", "32 High St",
+        PersonDb.getInstance().insert(new Person(2, "James", "Bond", "32 High St",
                 "London"));
-        PersonDb.getInstance().insert(new Person(2, "Robert", "Price-Jones", "32 High St",
+        PersonDb.getInstance().insert(new Person(3, "Sam", "Smith", "32 High St",
                 "London"));
-        OrderDb.getInstance().insert(new Order(10,2000,1));
+        OrderDb.getInstance().insert(new Order(10,2000,2));
 
     }
 
