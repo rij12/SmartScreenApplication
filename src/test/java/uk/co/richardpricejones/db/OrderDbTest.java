@@ -1,9 +1,8 @@
 package uk.co.richardpricejones.db;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class OrderDb {
+public class OrderDbTest {
 
 
     /**
@@ -11,12 +10,11 @@ public class OrderDb {
      */
 
     //
-
     @Test
-    public void findAllOrdersWithFirstName(){
+    public void findAllOrdersWithFirstName() {
 
         // Call the method from main code.
-        // Call my OrderDb here! get the
+        // Call my OrderDbTest here! get the
         // Compare output to test output.
 
         //Assert here!
