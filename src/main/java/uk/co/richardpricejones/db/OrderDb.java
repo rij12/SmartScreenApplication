@@ -102,7 +102,7 @@ public class OrderDb {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(ALL_ORDERS_WITH_FIRST_NAME);
 
-            // Only returning a List of strings because that is the requirement, see project summary.
+            // Only returning a List of strings because that fulfils the requirement.
             while (rs.next()) {
                 long orderId = rs.getLong("ORDER_ID");
                 long orderNumber = rs.getLong("ORDER_NO");

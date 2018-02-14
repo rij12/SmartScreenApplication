@@ -34,7 +34,6 @@ public class OrderDbTest {
         Assert.assertTrue(OrderDb.getInstance().findAllOrdersWithFirstName().get(0).equals(testString));
     }
 
-
     /**
      * Create Dummy Data for the Find all order with first Name method.
      * <p>

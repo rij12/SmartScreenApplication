@@ -87,14 +87,14 @@ public class Main {
         System.out.println("-----------------------------------------------------------------------");
 
         // 2. All Orders with First Name of the corresponding person (if available)
-        System.out.println("Requirement 2 - All orders and with the corresponding peron's firstName");
+        System.out.println("Requirement 2 - All orders and with the corresponding person's firstName");
         List<String> orderList = orderDb.findAllOrdersWithFirstName();
         orderList.forEach(o -> System.out.println(o));
 
 
 
         // DELETES DATABASE!!!
-        deleteDb();
+        // deleteDb();
     }
 
     /**
