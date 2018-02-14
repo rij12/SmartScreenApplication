@@ -6,6 +6,7 @@ import uk.co.richardpricejones.models.Order;
 import uk.co.richardpricejones.models.Person;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -91,6 +92,9 @@ public class Main {
         orderList.forEach(o -> System.out.println(o));
 
 
+
+        // DELETES DATABASE!!!
+        deleteDb();
     }
 
     /**
@@ -109,6 +113,17 @@ public class Main {
             System.exit(1);
         }
         return lines;
+    }
+
+
+    /**
+     * Cleans up database
+     */
+    private static void deleteDb() {
+        File testDb = new File("SQLite.db");
+        if (testDb.exists()) {
+            testDb.delete();
+        }
     }
 
     public static void main(String[] args) {
