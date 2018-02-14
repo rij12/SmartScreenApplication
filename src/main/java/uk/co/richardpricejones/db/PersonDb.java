@@ -185,9 +185,6 @@ public class PersonDb {
                 if (person != null) people.add(person);
             });
 
-            System.out.println("Persons with at least one Order");
-            people.forEach(p -> System.out.println(p));
-            System.out.println("");
         } catch (Exception e) {
             System.err.println("Couldn't find execute Person with at least one order SQL statement!" + e);
         } finally {
