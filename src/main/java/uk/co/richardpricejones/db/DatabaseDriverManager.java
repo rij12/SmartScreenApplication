@@ -1,8 +1,6 @@
 package uk.co.richardpricejones.db;
 
 import java.sql.*;
-//import java.sql.Connection;
-
 
 public class DatabaseDriverManager {
 

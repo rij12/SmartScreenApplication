@@ -1,9 +1,10 @@
 package uk.co.richardpricejones.db;
 
-import uk.co.richardpricejones.main.Main;
 import uk.co.richardpricejones.models.Order;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDb {
 
@@ -67,18 +68,6 @@ public class OrderDb {
         }
     }
 
-    public Order select(Long id) {
-        return null;
-    }
-
-    public void update(Order order) {
-
-    }
-
-    public void delete(Long id) {
-
-    }
-
     public void createOrderTable() {
 
         Connection conn = null;
@@ -103,15 +92,10 @@ public class OrderDb {
         }
     }
 
-    // Use Connection - Create find a Person record via a given Person_ID.
-//    PreparedStatement pstmt = conn.prepareStatement(FIND_PERSON_BY_ID);
-//            pstmt.setInt(1, id);
-//
-//
-//    ResultSet rs = pstmt.executeQuery();
-    // ALL_ORDERS_WITH_FIRST_NAME
-    public void findAllOrdersWithFirstName() {
+    public List<String> findAllOrdersWithFirstName() {
         Connection conn = null;
+
+        List<String> ordersWithFirstNames = new ArrayList<>();
         try {
             // Create a Connection
             conn = DatabaseDriverManager.getConnection();
@@ -120,23 +104,25 @@ public class OrderDb {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(ALL_ORDERS_WITH_FIRST_NAME);
 
-            System.out.println("All Orders with First Name of the corresponding person ");
+            // Only returning a List of strings because that is the requirement, see project summary.
             while (rs.next()) {
-                long orderNumber = rs.getLong("Order_Number");
                 long orderId = rs.getLong("Order_ID");
+                long orderNumber = rs.getLong("Order_Number");
                 String firstName = rs.getString("First_Name");
-
-                System.out.println("Order Number: " + orderNumber + ", " + "OrderId: " + orderId + ", " + "First Name: " + firstName);
+                String orderWithFirstName = "Order Number: " + orderNumber + ", " + "OrderId: " + orderId + ", " + "First Name: " + firstName;
+                ordersWithFirstNames.add(orderWithFirstName);
             }
+            return ordersWithFirstNames;
         } catch (Exception e) {
-            System.err.println("Could not get All order with First Names, " + e);
+            System.err.println("Could not get orders with First Names: " + e);
+            return ordersWithFirstNames;
         } finally {
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+                System.out.println("Couldn't close Database Connection see error: " + ex.getMessage());
             }
         }
     }
