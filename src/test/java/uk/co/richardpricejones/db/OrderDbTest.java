@@ -37,13 +37,13 @@ public class OrderDbTest {
 
     /**
      * Create Dummy Data for the Find all order with first Name method.
-     *
+     * <p>
      * Steps:
-     *  1. Create a person that have an Order.
-     *  2. Create two Orders one with and another without a person.
+     * 1. Create a person that have an Order.
+     * 2. Create two Orders one with and another without a person.
      */
     private static void createDummyData() throws ClassNotFoundException {
-        OrderDb.getInstance().insert(new Order(10, 2000,1));
+        OrderDb.getInstance().insert(new Order(10, 2000, 1));
         PersonDb.getInstance().insert(new Person(1, "Richard", "Price-Jones", "32 High St",
                 "London"));
 

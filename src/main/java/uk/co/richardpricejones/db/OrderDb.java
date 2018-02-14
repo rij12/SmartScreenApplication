@@ -10,18 +10,17 @@ public class OrderDb {
 
     private static OrderDb instance = null;
 
-    private static final String INSERT_ORDER = "INSERT INTO 'ORDER'(Order_ID,Order_Number,Person_ID)"
+    private static final String INSERT_ORDER = "INSERT INTO 'ORDER'(ORDER_ID,ORDER_NO,PERSON_ID)"
             + "VALUES(?, ?, ?)";
 
-    // todo Explain what this does!
-    private static final String ALL_ORDERS_WITH_FIRST_NAME = "SELECT 'ORDER'.Order_Number, 'Order'.Order_ID, " +
-            "PERSON.First_Name FROM 'ORDER' LEFT JOIN PERSON " +
-            "ON 'ORDER'.Person_ID = PERSON.Person_ID";
+    private static final String ALL_ORDERS_WITH_FIRST_NAME = "SELECT 'ORDER'.ORDER_NO, 'Order'.ORDER_ID , " +
+            "PERSON.FIRST_NAME FROM 'ORDER' LEFT JOIN PERSON " +
+            "ON 'ORDER'.PERSON_ID = PERSON.PERSON_ID";
 
     private static final String ORDER_TABLE_CREATE_SQL = "CREATE TABLE IF NOT EXISTS 'ORDER' (\n"
-            + "	Order_ID INTEGER PRIMARY KEY,\n"
-            + "	Order_Number INTEGER,\n"
-            + "	Person_ID INTEGER \n"
+            + "	ORDER_ID INTEGER PRIMARY KEY,\n"
+            + "	ORDER_NO INTEGER,\n"
+            + "	PERSON_ID INTEGER \n"
             + ");";
 
     private OrderDb() {
@@ -36,9 +35,8 @@ public class OrderDb {
 
     /**
      * Given a order model object it will make an entry into the database.
-     * "INSERT INTO Customers " + "VALUES (1001, 'Simpson', 'Mr.', 'Springfield', 2001)");
      *
-     * @param order
+     * @param order order object to be inserted into the ORDER table.
      */
     public void insert(Order order) throws ClassNotFoundException {
 
@@ -80,7 +78,7 @@ public class OrderDb {
             stmt.execute(ORDER_TABLE_CREATE_SQL);
 
         } catch (Exception e) {
-            System.err.println("Could not create Order Table" + e);
+            System.err.println("Could not create ORDER Table" + e);
         } finally {
             try {
                 if (conn != null) {
@@ -106,10 +104,11 @@ public class OrderDb {
 
             // Only returning a List of strings because that is the requirement, see project summary.
             while (rs.next()) {
-                long orderId = rs.getLong("Order_ID");
-                long orderNumber = rs.getLong("Order_Number");
-                String firstName = rs.getString("First_Name");
-                String orderWithFirstName = "Order Number: " + orderNumber + ", " + "OrderId: " + orderId + ", " + "First Name: " + firstName;
+                long orderId = rs.getLong("ORDER_ID");
+                long orderNumber = rs.getLong("ORDER_NO");
+                String firstName = rs.getString("FIRST_NAME");
+                String orderWithFirstName = "Order Number: " + orderNumber + ", " + "OrderId: " + orderId + ", " +
+                        "First Name: " + firstName;
                 ordersWithFirstNames.add(orderWithFirstName);
             }
             return ordersWithFirstNames;

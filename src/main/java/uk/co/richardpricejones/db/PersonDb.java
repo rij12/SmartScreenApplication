@@ -13,17 +13,17 @@ public class PersonDb {
     private static PersonDb instance = null;
 
     private static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS PERSON (\n"
-            + "	Person_ID INTEGER PRIMARY KEY,\n"
-            + "	First_Name TEXT,\n"
-            + "	Last_Name TEXT, \n"
-            + "	Street TEXT, \n"
-            + "	City TEXT \n"
+            + "	PERSON_ID INTEGER PRIMARY KEY,\n"
+            + "	FIRST_NAME TEXT,\n"
+            + "	LAST_NAME TEXT, \n"
+            + "	STREET TEXT, \n"
+            + "	CITY TEXT \n"
             + ");";
 
-    private static final String INSERT_PERSON = "INSERT INTO PERSON (Person_ID, First_Name, Last_Name, Street, City) "
+    private static final String INSERT_PERSON = "INSERT INTO PERSON (PERSON_ID, FIRST_NAME, LAST_NAME, STREET, CITY) "
             + "VALUES(?, ?, ?, ?, ?)";
 
-    private static final String PERSON_WITH_AT_LEAST_ONE_ORDER = "SELECT Person.Person_ID FROM PERSON INNER JOIN 'ORDER' ON Person.Person_ID = 'ORDER'.Person_ID";
+    private static final String PERSON_WITH_AT_LEAST_ONE_ORDER = "SELECT Person.PERSON_ID FROM PERSON INNER JOIN 'ORDER' ON Person.PERSON_ID = 'ORDER'.PERSON_ID";
 
     private static final String FIND_PERSON_BY_ID = "SELECT * FROM PERSON WHERE PERSON_ID = ?";
 
@@ -82,7 +82,7 @@ public class PersonDb {
     }
 
     /**
-     * Get Person record via a Person_ID(long)
+     * Get Person record via a PERSON_ID(long)
      *
      * @param id Person_Id
      * @return Populated Person Object.
@@ -96,18 +96,18 @@ public class PersonDb {
             // Create a Connection.
             conn = DatabaseDriverManager.getConnection();
 
-            // Use Connection - Create find a Person record via a given Person_ID.
+            // Use Connection - Create find a Person record via a given PERSON_ID.
             PreparedStatement pstmt = conn.prepareStatement(FIND_PERSON_BY_ID);
             pstmt.setInt(1, id);
 
             ResultSet rs = pstmt.executeQuery();
 
             // Create Person Object to be returned.
-            long person_id = rs.getLong("Person_ID");
-            String firstName = rs.getString("First_Name");
-            String lastName = rs.getString("Last_Name");
-            String street = rs.getString("Street");
-            String city = rs.getString("City");
+            long person_id = rs.getLong("PERSON_ID");
+            String firstName = rs.getString("FIRST_NAME");
+            String lastName = rs.getString("LAST_NAME");
+            String street = rs.getString("STREET");
+            String city = rs.getString("CITY");
 
             person = new Person(person_id, firstName, lastName, street, city);
             return person;
@@ -170,10 +170,10 @@ public class PersonDb {
             ResultSet rs = stmt.executeQuery(PERSON_WITH_AT_LEAST_ONE_ORDER);
             // List of ID's of people who have at least one order.
             while (rs.next()) {
-                Integer personId = Integer.parseInt(rs.getString("Person_ID"));
+                Integer personId = Integer.parseInt(rs.getString("PERSON_ID"));
                 // Add id to array if not already in there.
 
-                // Check if the Person_ID is already in the arrayList.
+                // Check if the PERSON_ID is already in the arrayList.
                 if (!personWithAtLeastOneOrder.contains(personId)) {
                     personWithAtLeastOneOrder.add(personId);
                 }
@@ -213,11 +213,11 @@ public class PersonDb {
             ResultSet rs = stmt.executeQuery(SELECT_ALL_ORDERS);
             // List of ID's of people who have at least one order.
             while (rs.next()) {
-                long person_id = rs.getLong("Person_ID");
-                String firstName = rs.getString("First_Name");
-                String lastName = rs.getString("Last_Name");
-                String street = rs.getString("Street");
-                String city = rs.getString("City");
+                long person_id = rs.getLong("PERSON_ID");
+                String firstName = rs.getString("FIRST_NAME");
+                String lastName = rs.getString("LAST_NAME");
+                String street = rs.getString("STREET");
+                String city = rs.getString("CITY");
 
                 Person person = new Person(person_id, firstName, lastName, street, city);
                 people.add(person);

@@ -52,7 +52,7 @@ public class PersonDbTest {
      * Create Dummy data for the Person with at least one order requirement.
      *   Insert Dummy Data Steps:
      *   1. Insert 2 people, with one person that has an order.
-     *   2. Insert an Order into the ORDER table that has a Person_ID that is the same as one of the insert people.
+     *   2. Insert an Order into the ORDER table that has a PERSON_ID that is the same as one of the insert people.
      */
     private static void CreateDummyDataForPersonWithAtLeastOneOrder() throws ClassNotFoundException {
 
